@@ -1,0 +1,648 @@
+{
+    "Version": "2020-12-01",
+    "Metadata": {},
+    "Parameters": [
+        {
+            "Name": "param0",
+            "Type": "String",
+            "DefaultValue": "model_options.test_size"
+        },
+        {
+            "Name": "value0",
+            "Type": "Float",
+            "DefaultValue": 0.2
+        },
+        {
+            "Name": "param1",
+            "Type": "String",
+            "DefaultValue": "model_options.random_state"
+        },
+        {
+            "Name": "value1",
+            "Type": "Integer",
+            "DefaultValue": 3
+        },
+        {
+            "Name": "param2",
+            "Type": "String",
+            "DefaultValue": "model_options.features"
+        },
+        {
+            "Name": "value2",
+            "Type": "String",
+            "DefaultValue": "[\"engines\", \"passenger_capacity\", \"crew\", \"d_check_complete\", \"moon_clearance_complete\", \"iata_approved\", \"company_rating\", \"review_scores_rating\"]"
+        }
+    ],
+    "PipelineExperimentConfig": {
+        "ExperimentName": {
+            "Get": "Execution.PipelineName"
+        },
+        "TrialName": {
+            "Get": "Execution.PipelineExecutionId"
+        }
+    },
+    "Steps": [
+        {
+            "Name": "load_shuttles_to_csv_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=load_shuttles_to_csv_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DisplayName": "load_shuttles_to_csv_node",
+            "Description": "load_shuttles_to_csv_node"
+        },
+        {
+            "Name": "preprocess_companies_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=preprocess_companies_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DisplayName": "preprocess_companies_node",
+            "Description": "preprocess_companies_node"
+        },
+        {
+            "Name": "preprocess_reviews_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=preprocess_reviews_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DisplayName": "preprocess_reviews_node",
+            "Description": "preprocess_reviews_node"
+        },
+        {
+            "Name": "preprocess_shuttles_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=preprocess_shuttles_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DependsOn": [
+                "load_shuttles_to_csv_node"
+            ],
+            "DisplayName": "preprocess_shuttles_node",
+            "Description": "preprocess_shuttles_node"
+        },
+        {
+            "Name": "create_model_input_table_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=create_model_input_table_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DependsOn": [
+                "preprocess_companies_node",
+                "preprocess_reviews_node",
+                "preprocess_shuttles_node"
+            ],
+            "DisplayName": "create_model_input_table_node",
+            "Description": "create_model_input_table_node"
+        },
+        {
+            "Name": "split_data_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=split_data_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DependsOn": [
+                "create_model_input_table_node"
+            ],
+            "DisplayName": "split_data_node",
+            "Description": "split_data_node"
+        },
+        {
+            "Name": "train_model_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=train_model_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DependsOn": [
+                "split_data_node"
+            ],
+            "DisplayName": "train_model_node",
+            "Description": "train_model_node"
+        },
+        {
+            "Name": "evaluate_model_node",
+            "Type": "Processing",
+            "Arguments": {
+                "ProcessingResources": {
+                    "ClusterConfig": {
+                        "InstanceType": "ml.t3.medium",
+                        "InstanceCount": 1,
+                        "VolumeSizeInGB": 30,
+                        "VolumeKmsKeyId": "arn:aws:kms:us-east-2:642693618675:key/fc725947-c5ba-406c-97ea-fa788df0fca5"
+                    }
+                },
+                "AppSpecification": {
+                    "ImageUri": "642693618675.dkr.ecr.us-east-2.amazonaws.com/test-docker/kedro",
+                    "ContainerEntrypoint": [
+                        "kedro",
+                        "sagemaker",
+                        "-e",
+                        "local",
+                        "execute",
+                        "--pipeline=__default__",
+                        "--node=evaluate_model_node"
+                    ]
+                },
+                "RoleArn": "arn:aws:iam::642693618675:role/lauren-ssoExecutionRole",
+                "Environment": {
+                    "KEDRO_SAGEMAKER_RUNNER_CONFIG": "{\"bucket\":\"sagemaker-domain-lauren-dev/lauren-sso\"}",
+                    "KEDRO_SAGEMAKER_EXECUTION_ARN": {
+                        "Get": "Execution.PipelineExecutionArn"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_0": {
+                        "Get": "Parameters.param0"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_0": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value0"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_1": {
+                        "Get": "Parameters.param1"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_1": {
+                        "Std:Join": {
+                            "On": "",
+                            "Values": [
+                                {
+                                    "Get": "Parameters.value1"
+                                }
+                            ]
+                        }
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_KEY_2": {
+                        "Get": "Parameters.param2"
+                    },
+                    "KEDRO_SAGEMAKER_PARAM_VALUE_2": {
+                        "Get": "Parameters.value2"
+                    }
+                },
+                "NetworkConfig": {
+                    "EnableNetworkIsolation": false
+                },
+                "StoppingCondition": {
+                    "MaxRuntimeInSeconds": 86400
+                }
+            },
+            "DependsOn": [
+                "split_data_node",
+                "train_model_node"
+            ],
+            "DisplayName": "evaluate_model_node",
+            "Description": "evaluate_model_node"
+        }
+    ]
+}
